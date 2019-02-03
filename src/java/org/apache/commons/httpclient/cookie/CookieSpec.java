@@ -31,6 +31,7 @@
 package org.apache.commons.httpclient.cookie;
 
 import java.util.Collection;
+import java.util.SortedMap; // <- IA/HERITRIX CHANGE
 
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.NameValuePair;
@@ -176,9 +177,34 @@ public interface CookieSpec {
      *
      * @return <tt>true</tt> if the cookie should be submitted with a request 
      *  with given attributes, <tt>false</tt> otherwise.
+     *  
+// BEGIN IA/HERITRIX CHANGES
+     * @deprecated use match(String, int, String, boolean, SortedMap)
+// END IA/HERITRIX CHANGES
      */
     Cookie[] match(String host, int port, String path, boolean secure, 
         final Cookie cookies[]);
+
+// BEGIN IA/HERITRIX CHANGES
+    /**
+     * Determines which of an array of Cookies matches a location.
+     *
+     * If the SortedMap comes from an HttpState and is not itself
+     * thread-safe, it may be necessary to synchronize on the HttpState
+     * instance to protect against concurrent modification. 
+     *
+     * @param host the host to which the request is being submitted
+     * @param port the port to which the request is being submitted 
+     *  (currenlty ignored)
+     * @param path the path to which the request is being submitted
+     * @param secure <tt>true</tt> if the request is using a secure protocol
+     * @param cookies SortedMap of <tt>Cookie</tt>s to be matched
+     *
+     * @return <tt>true</tt> if the cookie should be submitted with a request 
+     *  with given attributes, <tt>false</tt> otherwise.
+     */
+    Cookie[] match(String domain, int port, String path, boolean secure, SortedMap cookiesMap);
+// END IA/HERITRIX CHANGES
 
     /**
      * Performs domain-match as defined by the cookie specification.

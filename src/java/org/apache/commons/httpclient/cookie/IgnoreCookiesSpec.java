@@ -31,6 +31,7 @@
 package org.apache.commons.httpclient.cookie;
 
 import java.util.Collection;
+import java.util.SortedMap; // <- IA/HERITRIX CHANGE
 
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.Header;
@@ -150,4 +151,10 @@ public class IgnoreCookiesSpec implements CookieSpec {
         return false;
     }
 
+// BEGIN IA/HERITRIX ADDITION
+    public Cookie[] match(String domain, int port, String path, boolean secure,
+        SortedMap cookiesMap) {
+        return new Cookie[0];
+    }
+// END IA/HERITRIX CHANGE
 }

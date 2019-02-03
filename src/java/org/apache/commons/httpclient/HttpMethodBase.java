@@ -42,6 +42,7 @@ import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.cookie.CookieSpec;
 import org.apache.commons.httpclient.cookie.CookieVersionSupport;
 import org.apache.commons.httpclient.cookie.MalformedCookieException;
+import org.apache.commons.httpclient.heritrix.LaxURI;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.httpclient.util.EncodingUtil;
@@ -96,6 +97,7 @@ import org.apache.commons.logging.LogFactory;
  *
  * @version $Revision: 539441 $ $Date: 2007-05-18 14:56:55 +0200 (Fri, 18 May 2007) $
  */
+@SuppressWarnings("deprecation") // <- // IA/HERITRIX change
 public abstract class HttpMethodBase implements HttpMethod {
 
     // -------------------------------------------------------------- Constants
@@ -216,8 +218,10 @@ public abstract class HttpMethodBase implements HttpMethod {
             if (uri == null || uri.equals("")) {
                 uri = "/";
             }
-            String charset = getParams().getUriCharset();
-            setURI(new URI(uri, true, charset));
+// BEGIN IA/HERITRIX CHANGES
+//        setURI(new URI(uri, true));
+          setURI(new LaxURI(uri, true));
+// END IA/HERITRIX CHANGES
         } catch (URIException e) {
             throw new IllegalArgumentException("Invalid uri '" 
                 + uri + "': " + e.getMessage() 
@@ -261,8 +265,10 @@ public abstract class HttpMethodBase implements HttpMethod {
             buffer.append('?');
             buffer.append(this.queryString);
         }
-        String charset = getParams().getUriCharset();
-        return new URI(buffer.toString(), true, charset);
+//      BEGIN IA/HERITRIX CHANGES
+//      return new URI(buffer.toString(), true);
+        return new LaxURI(buffer.toString(), true);
+//      END IA/HERITRIX CHANGES
     }
 
     /**
@@ -1279,8 +1285,10 @@ public abstract class HttpMethodBase implements HttpMethod {
         if (host == null) {
             host = conn.getHost();
         }
+        // BEGIN IA/HERITRIX CHANGES
         Cookie[] cookies = matcher.match(host, conn.getPort(),
-            getPath(), conn.isSecure(), state.getCookies());
+            getPath(), conn.isSecure(), state.getCookiesMap());
+        // END IA/HERITRIX CHANGES
         if ((cookies != null) && (cookies.length > 0)) {
             if (getParams().isParameterTrue(HttpMethodParams.SINGLE_COOKIE_HEADER)) {
                 // In strict mode put all cookies on the same header

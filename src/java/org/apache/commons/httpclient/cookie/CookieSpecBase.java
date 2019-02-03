@@ -32,8 +32,10 @@ package org.apache.commons.httpclient.cookie;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator; // <- IA/HERITRIX CHANGE
 import java.util.LinkedList;
 import java.util.List;
+import java.util.SortedMap; // <- IA/HERITRIX CHANGE
 
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.Header;
@@ -43,6 +45,8 @@ import org.apache.commons.httpclient.util.DateParseException;
 import org.apache.commons.httpclient.util.DateUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import com.sleepycat.collections.StoredIterator; // <- IA/HERITRIX CHANGE
 
 /**
  * 
@@ -61,6 +65,7 @@ import org.apache.commons.logging.LogFactory;
  * 
  * @since 2.0 
  */
+@SuppressWarnings("unchecked") // <- IA/HERITRIX CHANGE
 public class CookieSpecBase implements CookieSpec {
     
     /** Log object */
@@ -541,6 +546,10 @@ public class CookieSpecBase implements CookieSpec {
      * @param secure <tt>true</tt> if the request is using a secure protocol
      * @param cookies an array of <tt>Cookie</tt>s to be matched
      * @return an array of <tt>Cookie</tt>s matching the criterium
+     * 
+// BEGIN IA/HERITRIX CHANGES
+     * @deprecated use match(String, int, String, boolean, SortedMap)
+// END IA/HERITRIX CHANGES
      */
 
     public Cookie[] match(String host, int port, String path, 
@@ -561,7 +570,56 @@ public class CookieSpecBase implements CookieSpec {
         return (Cookie[]) matching.toArray(new Cookie[matching.size()]);
     }
 
+//  BEGIN IA/HERITRIX CHANGES
+    /**
+     * Return an array of {@link Cookie}s that should be submitted with a
+     * request with given attributes, <tt>false</tt> otherwise. 
+     * 
+     * If the SortedMap comes from an HttpState and is not itself
+     * thread-safe, it may be necessary to synchronize on the HttpState
+     * instance to protect against concurrent modification. 
+     *
+     * @param host the host to which the request is being submitted
+     * @param port the port to which the request is being submitted (currently
+     * ignored)
+     * @param path the path to which the request is being submitted
+     * @param secure <tt>true</tt> if the request is using a secure protocol
+     * @param cookies SortedMap of <tt>Cookie</tt>s to be matched
+     * @return an array of <tt>Cookie</tt>s matching the criterium
+     */
 
+    public Cookie[] match(String host, int port, String path, 
+        boolean secure, final SortedMap cookies) {
+            
+        LOG.trace("enter CookieSpecBase.match("
+           + "String, int, String, boolean, SortedMap)");
+
+        // TODO: skip meaningless 'narrowing' when host is a numeric IP
+        // (harmless in the meantime)
+        
+        if (cookies == null) {
+            return null;
+        }
+        List matching = new LinkedList();
+        String narrowHost = host;
+        do {
+            Iterator iter = cookies.subMap(narrowHost,
+                    narrowHost + Cookie.DOMAIN_OVERBOUNDS).values().iterator();
+            while (iter.hasNext()) {
+                Cookie cookie = (Cookie) (iter.next());
+                if (match(host, port, path, secure, cookie)) {
+                    addInPathOrder(matching, cookie);
+                }
+            }
+            StoredIterator.close(iter);
+            int trimTo = narrowHost.indexOf('.', 1);
+            narrowHost = (trimTo < 0) ? null : narrowHost.substring(trimTo+1);
+        } while (narrowHost != null);
+
+        return (Cookie[]) matching.toArray(new Cookie[matching.size()]); 
+    }
+//  END IA/HERITRIX CHANGES
+    
     /**
      * Adds the given cookie into the given list in descending path order. That
      * is, more specific path to least specific paths.  This may not be the

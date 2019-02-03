@@ -22,6 +22,31 @@ the Heritrix 1 agent must be packaged in a war with this version of `commons-htt
 
 Provide a non-conflicting set of dependencies so the heritrix 1.14.1 crawler can work without classpath conflicts.
 
+## Code changes
+
+The github source repository for these heritrix modifications can be found at
+https://github.com/WebCuratorTool/heritrix-1-14-adjust. That version of Heritrix 1.14 works with this version of
+`commons-httpclient`.
+
+1. The heritrix 1.14 code that appeared in `org/apache/commons/httpclient` has been merged into the this codebase.
+*NOTE* that these code changes ignored code differences that were not delimited by the comment `IA/HERITRIX CHANGE`
+(we suppose that these other differences are due to a slight difference in the commons-httpclient source used by the
+heritrix team).
+
+2. The classes `LaxURI`, `LaxURLCodec` and `HttpRecorderMarker` have been moved from the heritrix 1.14 codebase into
+this codebase. This is because these classes are used in the commons-httpclient modified code and maven builds do not
+allow cyclic dependencies. Their package is now `org.apache.commons.httpclient.heritrix`.
+
+3. This codebase has added an interface `org.apache.commons.httpclient.heritrix.HttpRecorder` that allows classes in
+this codebase to reference the heritrix 1.14 `HttpRecorder` without having a dependency on the heritrix
+`HttpRecorder` class. The heritrix `HttpRecorder` class implements the
+`org.apache.commons.httpclient.heritrix.HttpRecorder` interface.
+
+4. The static method `HttpRecorder#getHttpRecorder` has been replaced with
+`org.apache.commons.httpclient.heritrix.HttpRecorderRetriever#getHttpRecorder`. This method returns the
+interface `org.apache.commons.httpclient.heritrix.HttpRecorder`. To use non-interface methods, the returned object must
+be cast to `org.archive.util.HttpRecorder`.
+
 ## Versioning
 
 See the `pom.xml` file for the current jar version that will be generated. Previous versions have been tagged in the

@@ -60,6 +60,7 @@ import org.apache.commons.logging.LogFactory;
  * 
  * @version $Revision: 531354 $ $Date: 2007-04-23 08:53:20 +0200 (Mon, 23 Apr 2007) $
  */
+@SuppressWarnings("serial") // <- HERITRIX CHANGE
 public class Cookie extends NameValuePair implements Serializable, Comparator {
 
     // ----------------------------------------------------------- Constructors
@@ -495,6 +496,27 @@ public class Cookie extends NameValuePair implements Serializable, Comparator {
         return toExternalForm();
     }
 
+// BEGIN IA/HERITRIX ADDITION
+    /**
+     * Create a 'sort key' for this Cookie that will cause it to sort 
+     * alongside other Cookies of the same domain (with or without leading
+     * '.'). This helps cookie-match checks consider only narrow set of
+     * possible matches, rather than all cookies. 
+     * 
+     * Only two cookies that are equals() (same domain, path, name) will have
+     * the same sort key. The '\1' separator character is important in 
+     * conjunction with Cookie.DOMAIN+OVERBOUNDS, allowing keys based on the
+     * domain plus an extension to define the relevant range in a SortedMap. 
+     * @return String sort key for this cookie
+     */
+    public String getSortKey() {
+        String domain = getDomain();
+        return (domain.startsWith(".")) 
+            ? domain.substring(1) + "\1.\1" + getPath() + "\1" + getName() 
+            : domain + "\1\1" + getPath() + "\1" + getName();
+    }
+//  END IA/HERITRIX ADDITION   
+    
    // ----------------------------------------------------- Instance Variables
 
    /** Comment attribute. */
@@ -532,5 +554,13 @@ public class Cookie extends NameValuePair implements Serializable, Comparator {
    /** Log object for this class */
    private static final Log LOG = LogFactory.getLog(Cookie.class);
 
+// BEGIN IA/HERITRIX ADDITION
+   /**
+    * Character which, if appended to end of a domain, will give a 
+    * boundary key that sorts past all Cookie sortKeys for the same
+    * domain. 
+    */
+   public static final char DOMAIN_OVERBOUNDS = '\2';
+// END IA/HERITRIX ADDITION
 }
 
