@@ -43,25 +43,44 @@ install the dependency in a local maven 2 repository (run these commands from th
 ```
 mkdir -pv ./target/
 git clone https://github.com/WebCuratorTool/commons-httpclient-heritrix-1-14.git ./target/commons-httpclient-heritrix-1-14
-mvn install:install-file -Dfile=./target/commons-httpclient-heritrix-1-14/commons-httpclient-<version>.jar -DpomFile=./target/commons-httpclient-heritrix-1-14/commons-httpclient-<version>-pom.xml
+mvn install:install-file -Dfile=./target/commons-httpclient-heritrix-1-14/commons-httpclient-<version>.jar
 ```
 TODO setup the pom file
 Note that the version needs to be chosen for this script to work.
 
 ## Installation
 
-The artifacts are built using maven and will deploy to a maven version 2 repository.
+The artifacts are built using maven and will deploy to a local maven version 2 repository.
 
+### Java version for build
+
+We recommended that Java 5 (version 1.5) be used for the build, as this is the version that was used to create the original
+jar.
+
+Java 1.5 can be downloaded and installed from Oracle (https://www.oracle.com/technetwork/java/javasebusiness/downloads/java-archive-downloads-javase5-419410.html).
+This JVM can be run simply by setting `JAVA_HOME` to the unpacked location and including `JAVA_HOME/bin` in the shell
+path.
+
+### Maven version for build
+
+We recommend that Maven 2.x (latest stable release 2.2.1) be used for the build (this is the version that was used to
+create the jar artifacts). Maven 2.2.1 can be downloaded from
+https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/2.2.1/. This version of maven can be run by setting
+`MAVEN_HOME` to the path of the unpacked distribution and executing (on linux) `$MAVEN_HOME/bin/mvn clean install`.
+
+### Missing unit tests
+
+No unit tests were included in the source jar provided through Maven Central.
 
 ### Complete build
 
-Simply put, execute the following on linx:
+Simply put, execute the following on linux:
 ```
-$MAVEN_HOME/bin/maven [clean] dist
+$MAVEN_HOME/bin/mvn [clean] install
 ```
 or for Windows:
 ```
-%MAVEN_HOME%/bin/maven.bat [clean] dist
+%MAVEN_HOME%/bin/mvn.bat [clean] install
 ```
 
 ## Contributors
