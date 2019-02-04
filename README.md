@@ -108,6 +108,13 @@ or for Windows:
 %MAVEN_HOME%/bin/mvn.bat [clean] install
 ```
 
+## Updating the release_archive
+
+When updating the release_archive with a newer version, include the `pom.xml` for that version of the project. This makes
+it easier for other dependent project (especially the heritrix-1-14-adjust project) to populate its local maven
+repository with the pom associated with the jar. This does involving copying the `pom.xml` into `release-archive` and
+renaming it to `commons-httpclient-<version>.pom`.
+
 ## Contributors
 
 The original commits are attributed to the people or organisations named in the `pom.xml` file. Issues related to the changes made
