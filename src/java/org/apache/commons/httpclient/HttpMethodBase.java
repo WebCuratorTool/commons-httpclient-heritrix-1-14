@@ -94,6 +94,7 @@ import org.apache.commons.logging.LogFactory;
  *
  * @version $Revision: 345322 $ $Date: 2005-11-17 15:20:08 -0500 (Thu, 17 Nov 2005) $
  */
+@SuppressWarnings("deprecation") // <- // IA/HERITRIX change
 public abstract class HttpMethodBase implements HttpMethod {
 
     // -------------------------------------------------------------- Constants
@@ -214,7 +215,10 @@ public abstract class HttpMethodBase implements HttpMethod {
             if (uri == null || uri.equals("")) {
                 uri = "/";
             }
-            setURI(new URI(uri, true));
+// BEGIN IA/HERITRIX CHANGES
+//        setURI(new URI(uri, true));
+          setURI(new org.archive.net.LaxURI(uri, true));
+// END IA/HERITRIX CHANGES
         } catch (URIException e) {
             throw new IllegalArgumentException("Invalid uri '" 
                 + uri + "': " + e.getMessage() 
@@ -258,7 +262,10 @@ public abstract class HttpMethodBase implements HttpMethod {
             buffer.append('?');
             buffer.append(this.queryString);
         }
-        return new URI(buffer.toString(), true);
+//      BEGIN IA/HERITRIX CHANGES
+//      return new URI(buffer.toString(), true);
+        return new org.archive.net.LaxURI(buffer.toString(), true);
+//      END IA/HERITRIX CHANGES
     }
 
     /**
@@ -1176,8 +1183,10 @@ public abstract class HttpMethodBase implements HttpMethod {
         if (host == null) {
             host = conn.getHost();
         }
+        // BEGIN IA/HERITRIX CHANGES
         Cookie[] cookies = matcher.match(host, conn.getPort(),
-            getPath(), conn.isSecure(), state.getCookies());
+            getPath(), conn.isSecure(), state.getCookiesMap());
+        // END IA/HERITRIX CHANGES
         if ((cookies != null) && (cookies.length > 0)) {
             if (getParams().isParameterTrue(HttpMethodParams.SINGLE_COOKIE_HEADER)) {
                 // In strict mode put all cookies on the same header

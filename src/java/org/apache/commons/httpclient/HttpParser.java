@@ -47,6 +47,7 @@ import org.apache.commons.logging.LogFactory;
  * 
  * @since 2.0beta1
  */
+@SuppressWarnings("unchecked") // <- IA/HERITRIX CHANGE
 public class HttpParser {
 
     /** Log object for this class. */
@@ -187,11 +188,22 @@ public class HttpParser {
                 // Otherwise we should have normal HTTP header line
                 // Parse the header name and value
                 int colon = line.indexOf(":");
+                
+                // START IA/HERITRIX change
+                // Don't throw an exception if can't parse.  We want to keep
+                // going even though header is bad. Rather, create
+                // pseudo-header.
                 if (colon < 0) {
-                    throw new ProtocolException("Unable to parse header: " + line);
-                }
+                    // throw new ProtocolException("Unable to parse header: " +
+                    //      line);
+                    name = "HttpClient-Bad-Header-Line-Failed-Parse";
+                    value = new StringBuffer(line);
+
+                } else {
                 name = line.substring(0, colon).trim();
                 value = new StringBuffer(line.substring(colon + 1).trim());
+                }
+                // END IA/HERITRIX change
             }
 
         }
