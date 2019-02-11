@@ -1,16 +1,15 @@
 /*
  * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//httpclient/src/java/org/apache/commons/httpclient/HttpMethodDirector.java,v 1.34 2005/01/14 19:40:39 olegk Exp $
- * $Revision: 486658 $
- * $Date: 2006-12-13 15:05:50 +0100 (Wed, 13 Dec 2006) $
+ * $Revision: 366870 $
+ * $Date: 2006-01-07 13:12:55 -0500 (Sat, 07 Jan 2006) $
  *
  * ====================================================================
  *
- *  Licensed to the Apache Software Foundation (ASF) under one or more
- *  contributor license agreements.  See the NOTICE file distributed with
- *  this work for additional information regarding copyright ownership.
- *  The ASF licenses this file to You under the Apache License, Version 2.0
- *  (the "License"); you may not use this file except in compliance with
- *  the License.  You may obtain a copy of the License at
+ *  Copyright 1999-2004 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -453,7 +452,7 @@ class HttpMethodDirector {
             releaseConnection = true;
             throw e;
         } catch (RuntimeException e) {
-            if (this.conn.isOpen()) {
+            if (this.conn.isOpen) {
                 LOG.debug("Closing the connection.");
                 this.conn.close();
             }
@@ -473,7 +472,7 @@ class HttpMethodDirector {
     private boolean executeConnect() 
         throws IOException, HttpException {
 
-        this.connectMethod = new ConnectMethod(this.hostConfiguration);
+        this.connectMethod = new ConnectMethod();
         this.connectMethod.getParams().setDefaults(this.hostConfiguration.getParams());
         
         int code;
@@ -516,7 +515,6 @@ class HttpMethodDirector {
             this.connectMethod = null;
             return true;
         } else {
-            this.conn.close();
             return false;
         }
     }
@@ -596,10 +594,7 @@ class HttpMethodDirector {
                 this.conn.getPort(), 
                 method.getPath()
             );
-            
-            String charset = method.getParams().getUriCharset();
-            redirectUri = new URI(location, true, charset);
-            
+            redirectUri = new URI(location, true);
             if (redirectUri.isRelativeURI()) {
                 if (this.params.isParameterTrue(HttpClientParams.REJECT_RELATIVE_REDIRECT)) {
                     LOG.warn("Relative redirect location '" + location + "' not allowed");
@@ -615,9 +610,9 @@ class HttpMethodDirector {
             }
             method.setURI(redirectUri);
             hostConfiguration.setHost(redirectUri);
-        } catch (URIException ex) {
-            throw new InvalidRedirectLocationException(
-                    "Invalid redirect location: " + location, location, ex);
+        } catch (URIException e) {
+            LOG.warn("Redirected location '" + location + "' is malformed");
+            return false;
         }
 
         if (this.params.isParameterFalse(HttpClientParams.ALLOW_CIRCULAR_REDIRECTS)) {
@@ -819,6 +814,8 @@ class HttpMethodDirector {
                 if (method.getFollowRedirects()) {
                     return true;
                 } else {
+                    LOG.info("Redirect requested but followRedirects is "
+                            + "disabled");
                     return false;
                 }
             default:

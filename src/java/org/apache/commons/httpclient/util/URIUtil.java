@@ -1,16 +1,15 @@
 /*
  * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//httpclient/src/java/org/apache/commons/httpclient/util/URIUtil.java,v 1.27 2004/05/05 20:34:01 olegk Exp $
- * $Revision: 507321 $
- * $Date: 2007-02-14 01:10:51 +0100 (Wed, 14 Feb 2007) $
+ * $Revision: 155418 $
+ * $Date: 2005-02-26 08:01:52 -0500 (Sat, 26 Feb 2005) $
  *
  * ====================================================================
  *
- *  Licensed to the Apache Software Foundation (ASF) under one or more
- *  contributor license agreements.  See the NOTICE file distributed with
- *  this work for additional information regarding copyright ownership.
- *  The ASF licenses this file to You under the Apache License, Version 2.0
- *  (the "License"); you may not use this file except in compliance with
- *  the License.  You may obtain a copy of the License at
+ *  Copyright 2002-2004 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -43,7 +42,7 @@ import org.apache.commons.httpclient.URIException;
  * than {@link org.apache.commons.httpclient.URI}.
  *
  * @author <a href="mailto:jericho@apache.org">Sung-Gu</a>
- * @version $Revision: 507321 $ $Date: 2002/03/14 15:14:01 
+ * @version $Revision: 155418 $ $Date: 2002/03/14 15:14:01 
  */
 public class URIUtil {
 
@@ -625,7 +624,7 @@ public class URIUtil {
             for (int i = from.length; i > 0; --i) {
                 original = replace(original, from[i], to[i]);
             }
-            return original;
+            return original.toString();
         }
 
 

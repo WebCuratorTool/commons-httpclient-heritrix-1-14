@@ -1,16 +1,15 @@
 /*
  * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//httpclient/src/java/org/apache/commons/httpclient/HttpURL.java,v 1.18 2004/09/30 17:26:41 oglueck Exp $
- * $Revision: 507324 $
- * $Date: 2007-02-14 01:12:11 +0100 (Wed, 14 Feb 2007) $
+ * $Revision: 358634 $
+ * $Date: 2005-12-22 16:23:15 -0500 (Thu, 22 Dec 2005) $
  *
  * ====================================================================
  *
- *  Licensed to the Apache Software Foundation (ASF) under one or more
- *  contributor license agreements.  See the NOTICE file distributed with
- *  this work for additional information regarding copyright ownership.
- *  The ASF licenses this file to You under the Apache License, Version 2.0
- *  (the "License"); you may not use this file except in compliance with
- *  the License.  You may obtain a copy of the License at
+ *  Copyright 2002-2004 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -549,8 +548,7 @@ public class HttpURL extends URI {
                     "escaped user not valid");
         }
         String username = new String(escapedUser);
-        char[] rawPassword = getRawPassword();
-        String password = rawPassword == null ? null : new String(rawPassword);
+        String password = new String(getRawPassword());
         String userinfo = username + ((password == null) ? "" : ":" + password);
         String hostname = new String(getRawHost());
         String hostport = (_port == -1) ? hostname : hostname + ":" + _port;
@@ -645,7 +643,7 @@ public class HttpURL extends URI {
             throw new URIException(URIException.PARSING, "username required");
         }
         String username = new String(getRawUser());
-        String password = escapedPassword == null ? null : new String(escapedPassword);
+        String password = new String(escapedPassword);
         // an emtpy string is allowed as a password
         String userinfo = username + ((password == null) ? "" : ":" + password);
         String hostname = new String(getRawHost());

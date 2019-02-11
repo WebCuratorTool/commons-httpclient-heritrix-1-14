@@ -1,16 +1,15 @@
 /*
  * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//httpclient/src/java/org/apache/commons/httpclient/ChunkedOutputStream.java,v 1.16 2004/05/13 04:03:25 mbecke Exp $
- * $Revision: 480424 $
- * $Date: 2006-11-29 06:56:49 +0100 (Wed, 29 Nov 2006) $
+ * $Revision: 220180 $
+ * $Date: 2005-07-21 16:29:45 -0400 (Thu, 21 Jul 2005) $
  *
  * ====================================================================
  *
- *  Licensed to the Apache Software Foundation (ASF) under one or more
- *  contributor license agreements.  See the NOTICE file distributed with
- *  this work for additional information regarding copyright ownership.
- *  The ASF licenses this file to You under the Apache License, Version 2.0
- *  (the "License"); you may not use this file except in compliance with
- *  the License.  You may obtain a copy of the License at
+ *  Copyright 2002-2004 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
  *

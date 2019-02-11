@@ -1,16 +1,15 @@
 /*
  * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//httpclient/src/java/org/apache/commons/httpclient/ProxyHost.java,v 1.2 2005/01/14 21:16:40 olegk Exp $
- * $Revision: 510587 $
- * $Date: 2007-02-22 17:56:08 +0100 (Thu, 22 Feb 2007) $
+ * $Revision: 155418 $
+ * $Date: 2005-02-26 08:01:52 -0500 (Sat, 26 Feb 2005) $
  *
  * ====================================================================
  *
- *  Licensed to the Apache Software Foundation (ASF) under one or more
- *  contributor license agreements.  See the NOTICE file distributed with
- *  this work for additional information regarding copyright ownership.
- *  The ASF licenses this file to You under the Apache License, Version 2.0
- *  (the "License"); you may not use this file except in compliance with
- *  the License.  You may obtain a copy of the License at
+ *  Copyright 2002-2004 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -74,12 +73,10 @@ public class ProxyHost extends HttpHost {
     }
     
     /**
-     * @throws CloneNotSupportedException 
      * @see java.lang.Object#clone()
      */
-    public Object clone() throws CloneNotSupportedException {
-        ProxyHost copy = (ProxyHost) super.clone();
-        return copy;
+    public Object clone() {
+        return new ProxyHost(this);
     }    
     
 }

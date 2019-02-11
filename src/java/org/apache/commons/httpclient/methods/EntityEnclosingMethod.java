@@ -1,16 +1,15 @@
 /*
  * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//httpclient/src/java/org/apache/commons/httpclient/methods/EntityEnclosingMethod.java,v 1.39 2004/07/03 14:27:03 olegk Exp $
- * $Revision: 480424 $
- * $Date: 2006-11-29 06:56:49 +0100 (Wed, 29 Nov 2006) $
+ * $Revision: 161963 $
+ * $Date: 2005-04-19 16:25:06 -0400 (Tue, 19 Apr 2005) $
  *
  * ====================================================================
  *
- *  Licensed to the Apache Software Foundation (ASF) under one or more
- *  contributor license agreements.  See the NOTICE file distributed with
- *  this work for additional information regarding copyright ownership.
- *  The ASF licenses this file to You under the Apache License, Version 2.0
- *  (the "License"); you may not use this file except in compliance with
- *  the License.  You may obtain a copy of the License at
+ *  Copyright 2003-2004 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -53,7 +52,7 @@ import org.apache.commons.logging.LogFactory;
  * @author <a href="mailto:jsdever@apache.org">Jeff Dever</a>
  *
  * @since 2.0beta1
- * @version $Revision: 480424 $
+ * @version $Revision: 161963 $
  */
 public abstract class EntityEnclosingMethod extends ExpectContinueMethod {
 
@@ -190,11 +189,8 @@ public abstract class EntityEnclosingMethod extends ExpectContinueMethod {
                 if (LOG.isWarnEnabled()) {
                     LOG.warn(charset + " not supported");
                 }
-                try {
-                    this.requestEntity = new StringRequestEntity(
-                            requestString, null, null);
-                } catch (UnsupportedEncodingException ignore) {
-                }
+                this.requestEntity = new StringRequestEntity(
+                        requestString);
             }
         }
 

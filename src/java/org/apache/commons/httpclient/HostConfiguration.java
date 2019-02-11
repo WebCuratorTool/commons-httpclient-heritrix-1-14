@@ -1,16 +1,15 @@
 /*
  * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//httpclient/src/java/org/apache/commons/httpclient/HostConfiguration.java,v 1.23 2005/01/14 21:16:40 olegk Exp $
- * $Revision: 510585 $
- * $Date: 2007-02-22 17:52:16 +0100 (Thu, 22 Feb 2007) $
+ * $Revision: 354155 $
+ * $Date: 2005-12-05 15:18:10 -0500 (Mon, 05 Dec 2005) $
  *
  * ====================================================================
  *
- *  Licensed to the Apache Software Foundation (ASF) under one or more
- *  contributor license agreements.  See the NOTICE file distributed with
- *  this work for additional information regarding copyright ownership.
- *  The ASF licenses this file to You under the Apache License, Version 2.0
- *  (the "License"); you may not use this file except in compliance with
- *  the License.  You may obtain a copy of the License at
+ *  Copyright 2002-2004 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -81,10 +80,6 @@ public class HostConfiguration implements Cloneable {
      * @param hostConfiguration the hostConfiguration to copy
      */
     public HostConfiguration (final HostConfiguration hostConfiguration) {
-        init(hostConfiguration);        
-    }
-
-    private void init(final HostConfiguration hostConfiguration) {
         // wrap all of the assignments in a synchronized block to avoid
         // having to negotiate the monitor for each method call
         synchronized (hostConfiguration) {
@@ -111,14 +106,7 @@ public class HostConfiguration implements Cloneable {
      * @see java.lang.Object#clone()
      */
     public Object clone() {
-        HostConfiguration copy;
-        try {
-            copy = (HostConfiguration) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new IllegalArgumentException("Host configuration could not be cloned");
-        }
-        copy.init(this);
-        return copy;
+        return new HostConfiguration(this);
     }    
     
     /**

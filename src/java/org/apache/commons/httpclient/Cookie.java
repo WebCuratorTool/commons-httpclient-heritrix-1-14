@@ -1,16 +1,15 @@
 /*
  * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//httpclient/src/java/org/apache/commons/httpclient/Cookie.java,v 1.44 2004/06/05 16:49:20 olegk Exp $
- * $Revision: 531354 $
- * $Date: 2007-04-23 08:53:20 +0200 (Mon, 23 Apr 2007) $
+ * $Revision: 157457 $
+ * $Date: 2005-03-14 15:23:16 -0500 (Mon, 14 Mar 2005) $
  *
  * ====================================================================
  *
- *  Licensed to the Apache Software Foundation (ASF) under one or more
- *  contributor license agreements.  See the NOTICE file distributed with
- *  this work for additional information regarding copyright ownership.
- *  The ASF licenses this file to You under the Apache License, Version 2.0
- *  (the "License"); you may not use this file except in compliance with
- *  the License.  You may obtain a copy of the License at
+ *  Copyright 1999-2004 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -31,8 +30,10 @@
 package org.apache.commons.httpclient;
 
 import java.io.Serializable;
+import java.text.RuleBasedCollator;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Locale;
 
 import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.cookie.CookieSpec;
@@ -58,9 +59,8 @@ import org.apache.commons.logging.LogFactory;
  * @author <a href="mailto:oleg@ural.ru">Oleg Kalnichevski</a>
  * @author <a href="mailto:mbowler@GargoyleSoftware.com">Mike Bowler</a>
  * 
- * @version $Revision: 531354 $ $Date: 2007-04-23 08:53:20 +0200 (Mon, 23 Apr 2007) $
+ * @version $Revision: 157457 $ $Date: 2005-03-14 15:23:16 -0500 (Mon, 14 Mar 2005) $
  */
-@SuppressWarnings("serial") // <- HERITRIX CHANGE
 public class Cookie extends NameValuePair implements Serializable, Comparator {
 
     // ----------------------------------------------------------- Constructors
@@ -481,7 +481,7 @@ public class Cookie extends NameValuePair implements Serializable, Comparator {
                 return 1;
             }
         } else {
-            return c1.getPath().compareTo(c2.getPath());
+            return STRING_COLLATOR.compare(c1.getPath(), c2.getPath());
         }
     }
 
@@ -496,27 +496,6 @@ public class Cookie extends NameValuePair implements Serializable, Comparator {
         return toExternalForm();
     }
 
-// BEGIN IA/HERITRIX ADDITION
-    /**
-     * Create a 'sort key' for this Cookie that will cause it to sort 
-     * alongside other Cookies of the same domain (with or without leading
-     * '.'). This helps cookie-match checks consider only narrow set of
-     * possible matches, rather than all cookies. 
-     * 
-     * Only two cookies that are equals() (same domain, path, name) will have
-     * the same sort key. The '\1' separator character is important in 
-     * conjunction with Cookie.DOMAIN+OVERBOUNDS, allowing keys based on the
-     * domain plus an extension to define the relevant range in a SortedMap. 
-     * @return String sort key for this cookie
-     */
-    public String getSortKey() {
-        String domain = getDomain();
-        return (domain.startsWith(".")) 
-            ? domain.substring(1) + "\1.\1" + getPath() + "\1" + getName() 
-            : domain + "\1\1" + getPath() + "\1" + getName();
-    }
-//  END IA/HERITRIX ADDITION   
-    
    // ----------------------------------------------------- Instance Variables
 
    /** Comment attribute. */
@@ -551,16 +530,16 @@ public class Cookie extends NameValuePair implements Serializable, Comparator {
 
    // -------------------------------------------------------------- Constants
 
+   /** 
+    * Collator for Cookie comparisons.  Could be replaced with references to
+    * specific Locales.
+    */
+   private static final RuleBasedCollator STRING_COLLATOR =
+        (RuleBasedCollator) RuleBasedCollator.getInstance(
+                                                new Locale("en", "US", ""));
+
    /** Log object for this class */
    private static final Log LOG = LogFactory.getLog(Cookie.class);
 
-// BEGIN IA/HERITRIX ADDITION
-   /**
-    * Character which, if appended to end of a domain, will give a 
-    * boundary key that sorts past all Cookie sortKeys for the same
-    * domain. 
-    */
-   public static final char DOMAIN_OVERBOUNDS = '\2';
-// END IA/HERITRIX ADDITION
 }
 

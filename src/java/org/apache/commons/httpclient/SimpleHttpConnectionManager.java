@@ -1,16 +1,15 @@
 /*
  * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//httpclient/src/java/org/apache/commons/httpclient/SimpleHttpConnectionManager.java,v 1.23 2004/10/16 22:40:08 mbecke Exp $
- * $Revision: 480424 $
- * $Date: 2006-11-29 06:56:49 +0100 (Wed, 29 Nov 2006) $
+ * $Revision: 329914 $
+ * $Date: 2005-10-31 16:24:47 -0500 (Mon, 31 Oct 2005) $
  *
  * ====================================================================
  *
- *  Licensed to the Apache Software Foundation (ASF) under one or more
- *  contributor license agreements.  See the NOTICE file distributed with
- *  this work for additional information regarding copyright ownership.
- *  The ASF licenses this file to You under the Apache License, Version 2.0
- *  (the "License"); you may not use this file except in compliance with
- *  the License.  You may obtain a copy of the License at
+ *  Copyright 2002-2004 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -72,6 +71,7 @@ public class SimpleHttpConnectionManager implements HttpConnectionManager {
             try {
                 lastResponse.close();
             } catch (IOException ioe) {
+                //FIXME: badness - close to force reconnect.
                 conn.close();
             }
         }
@@ -97,29 +97,8 @@ public class SimpleHttpConnectionManager implements HttpConnectionManager {
      * It will not be used to enforce thread safety.
      */
     private volatile boolean inUse = false;
-
-    private boolean alwaysClose = false;
-
-    /**
-     * The connection manager created with this constructor will try to keep the 
-     * connection open (alive) between consecutive requests if the alwaysClose 
-     * parameter is set to <tt>false</tt>. Otherwise the connection manager will 
-     * always close connections upon release.
-     * 
-     * @param alwaysClose if set <tt>true</tt>, the connection manager will always
-     *    close connections upon release.
-     */
-    public SimpleHttpConnectionManager(boolean alwaysClose) {
-        super();
-        this.alwaysClose = alwaysClose;
-    }
     
-    /**
-     * The connection manager created with this constructor will always try to keep 
-     * the connection open (alive) between consecutive requests.
-     */
     public SimpleHttpConnectionManager() {
-        super();
     }
     
     /**
@@ -159,13 +138,8 @@ public class SimpleHttpConnectionManager implements HttpConnectionManager {
     }
     
     /**
-     * This method always returns the same connection object. If the connection is already
-     * open, it will be closed and the new host configuration will be applied.
+     * @see HttpConnectionManager#getConnectionWithTimeout(HostConfiguration, long)
      * 
-     * @param hostConfiguration The host configuration specifying the connection
-     *        details.
-     * @param timeout this parameter has no effect. The connection is always returned
-     *        immediately.
      * @since 3.0
      */
     public HttpConnection getConnectionWithTimeout(
@@ -224,12 +198,8 @@ public class SimpleHttpConnectionManager implements HttpConnectionManager {
         if (conn != httpConnection) {
             throw new IllegalStateException("Unexpected release of an unknown connection.");
         }
-        if (this.alwaysClose) {
-            httpConnection.close();
-        } else {
-            // make sure the connection is reuseable
-            finishLastResponse(httpConnection);
-        }
+
+        finishLastResponse(httpConnection);
         
         inUse = false;
 
@@ -273,12 +243,4 @@ public class SimpleHttpConnectionManager implements HttpConnectionManager {
             httpConnection.close();
         }
     }
-    
-    /**
-     * since 3.1
-     */
-    public void shutdown() {
-        httpConnection.close();
-    }
-    
 }

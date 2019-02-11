@@ -1,16 +1,15 @@
 /*
  * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//httpclient/src/java/org/apache/commons/httpclient/HttpMethodBase.java,v 1.222 2005/01/14 21:16:40 olegk Exp $
- * $Revision: 539441 $
- * $Date: 2007-05-18 14:56:55 +0200 (Fri, 18 May 2007) $
+ * $Revision: 345322 $
+ * $Date: 2005-11-17 15:20:08 -0500 (Thu, 17 Nov 2005) $
  *
  * ====================================================================
  *
- *  Licensed to the Apache Software Foundation (ASF) under one or more
- *  contributor license agreements.  See the NOTICE file distributed with
- *  this work for additional information regarding copyright ownership.
- *  The ASF licenses this file to You under the Apache License, Version 2.0
- *  (the "License"); you may not use this file except in compliance with
- *  the License.  You may obtain a copy of the License at
+ *  Copyright 1999-2004 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -40,9 +39,7 @@ import java.util.Collection;
 import org.apache.commons.httpclient.auth.AuthState;
 import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.cookie.CookieSpec;
-import org.apache.commons.httpclient.cookie.CookieVersionSupport;
 import org.apache.commons.httpclient.cookie.MalformedCookieException;
-import org.apache.commons.httpclient.heritrix.LaxURI;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.httpclient.util.EncodingUtil;
@@ -95,9 +92,8 @@ import org.apache.commons.logging.LogFactory;
  * @author <a href="mailto:ggregory@seagullsw.com">Gary Gregory</a>
  * @author Christian Kohlschuetter
  *
- * @version $Revision: 539441 $ $Date: 2007-05-18 14:56:55 +0200 (Fri, 18 May 2007) $
+ * @version $Revision: 345322 $ $Date: 2005-11-17 15:20:08 -0500 (Thu, 17 Nov 2005) $
  */
-@SuppressWarnings("deprecation") // <- // IA/HERITRIX change
 public abstract class HttpMethodBase implements HttpMethod {
 
     // -------------------------------------------------------------- Constants
@@ -111,7 +107,7 @@ public abstract class HttpMethodBase implements HttpMethod {
     private HeaderGroup requestHeaders = new HeaderGroup();
 
     /** The Status-Line from the response. */
-    protected StatusLine statusLine = null;
+    private StatusLine statusLine = null;
 
     /** Response headers, if any. */
     private HeaderGroup responseHeaders = new HeaderGroup();
@@ -175,10 +171,10 @@ public abstract class HttpMethodBase implements HttpMethod {
     private static final int RESPONSE_WAIT_TIME_MS = 3000;
 
     /** HTTP protocol version used for execution of this method. */
-    protected HttpVersion effectiveVersion = null;
+    private HttpVersion effectiveVersion = null;
 
     /** Whether the execution of this method has been aborted */
-    private volatile boolean aborted = false;
+    private transient boolean aborted = false;
 
     /** Whether the HTTP request has been transmitted to the target
      * server it its entirety */
@@ -218,10 +214,7 @@ public abstract class HttpMethodBase implements HttpMethod {
             if (uri == null || uri.equals("")) {
                 uri = "/";
             }
-// BEGIN IA/HERITRIX CHANGES
-//        setURI(new URI(uri, true));
-          setURI(new LaxURI(uri, true));
-// END IA/HERITRIX CHANGES
+            setURI(new URI(uri, true));
         } catch (URIException e) {
             throw new IllegalArgumentException("Invalid uri '" 
                 + uri + "': " + e.getMessage() 
@@ -265,10 +258,7 @@ public abstract class HttpMethodBase implements HttpMethod {
             buffer.append('?');
             buffer.append(this.queryString);
         }
-//      BEGIN IA/HERITRIX CHANGES
-//      return new URI(buffer.toString(), true);
-        return new LaxURI(buffer.toString(), true);
-//      END IA/HERITRIX CHANGES
+        return new URI(buffer.toString(), true);
     }
 
     /**
@@ -661,9 +651,7 @@ public abstract class HttpMethodBase implements HttpMethod {
 
     /**
      * Returns the response body of the HTTP method, if any, as an array of bytes.
-     * If response body is not available or cannot be read, returns <tt>null</tt>.
-     * Buffers the response and this method can be called several times yielding
-     * the same result each time.
+     * If response body is not available or cannot be read, returns <tt>null</tt>
      * 
      * Note: This will cause the entire response body to be buffered in memory. A
      * malicious server may easily exhaust all the VM memory. It is strongly
@@ -705,71 +693,10 @@ public abstract class HttpMethodBase implements HttpMethod {
     }
 
     /**
-     * Returns the response body of the HTTP method, if any, as an array of bytes.
-     * If response body is not available or cannot be read, returns <tt>null</tt>.
-     * Buffers the response and this method can be called several times yielding
-     * the same result each time.
-     * 
-     * Note: This will cause the entire response body to be buffered in memory. This method is
-     * safe if the content length of the response is unknown, because the amount of memory used
-     * is limited.<p>
-     * 
-     * If the response is large this method involves lots of array copying and many object 
-     * allocations, which makes it unsuitable for high-performance / low-footprint applications.
-     * Those applications should use {@link #getResponseBodyAsStream()}.
-     * 
-     * @param maxlen the maximum content length to accept (number of bytes). 
-     * @return The response body.
-     * 
-     * @throws IOException If an I/O (transport) problem occurs while obtaining the 
-     * response body.
-     */
-    public byte[] getResponseBody(int maxlen) throws IOException {
-        if (maxlen < 0) throw new IllegalArgumentException("maxlen must be positive");
-        if (this.responseBody == null) {
-            InputStream instream = getResponseBodyAsStream();
-            if (instream != null) {
-                // we might already know that the content is larger
-                long contentLength = getResponseContentLength();
-                if ((contentLength != -1) && (contentLength > maxlen)) {
-                    throw new HttpContentTooLargeException(
-                            "Content-Length is " + contentLength, maxlen);
-                }
-                
-                LOG.debug("Buffering response body");
-                ByteArrayOutputStream rawdata = new ByteArrayOutputStream(
-                        contentLength > 0 ? (int) contentLength : DEFAULT_INITIAL_BUFFER_SIZE);
-                byte[] buffer = new byte[2048];
-                int pos = 0;
-                int len;
-                do {
-                    len = instream.read(buffer, 0, Math.min(buffer.length, maxlen-pos));
-                    if (len == -1) break;
-                    rawdata.write(buffer, 0, len);
-                    pos += len;
-                } while (pos < maxlen);
-                
-                setResponseStream(null);
-                // check if there is even more data
-                if (pos == maxlen) {
-                    if (instream.read() != -1)
-                        throw new HttpContentTooLargeException(
-                                "Content-Length not known but larger than "
-                                + maxlen, maxlen);
-                }
-                this.responseBody = rawdata.toByteArray();
-            }
-        }
-        return this.responseBody;
-    }
-
-    /**
      * Returns the response body of the HTTP method, if any, as an {@link InputStream}. 
-     * If response body is not available, returns <tt>null</tt>. If the response has been
-     * buffered this method returns a new stream object on every call. If the response
-     * has not been buffered the returned stream can only be read once.
+     * If response body is not available, returns <tt>null</tt>
      * 
-     * @return The response body or <code>null</code>.
+     * @return The response body
      * 
      * @throws IOException If an I/O (transport) problem occurs while obtaining the 
      * response body.
@@ -790,15 +717,14 @@ public abstract class HttpMethodBase implements HttpMethod {
      * Returns the response body of the HTTP method, if any, as a {@link String}. 
      * If response body is not available or cannot be read, returns <tt>null</tt>
      * The string conversion on the data is done using the character encoding specified
-     * in <tt>Content-Type</tt> header. Buffers the response and this method can be 
-     * called several times yielding the same result each time.
+     * in <tt>Content-Type</tt> header.
      * 
      * Note: This will cause the entire response body to be buffered in memory. A
      * malicious server may easily exhaust all the VM memory. It is strongly
      * recommended, to use getResponseAsStream if the content length of the response
      * is unknown or resonably large.
      * 
-     * @return The response body or <code>null</code>.
+     * @return The response body.
      * 
      * @throws IOException If an I/O (transport) problem occurs while obtaining the 
      * response body.
@@ -807,41 +733,6 @@ public abstract class HttpMethodBase implements HttpMethod {
         byte[] rawdata = null;
         if (responseAvailable()) {
             rawdata = getResponseBody();
-        }
-        if (rawdata != null) {
-            return EncodingUtil.getString(rawdata, getResponseCharSet());
-        } else {
-            return null;
-        }
-    }
-    
-    /**
-     * Returns the response body of the HTTP method, if any, as a {@link String}. 
-     * If response body is not available or cannot be read, returns <tt>null</tt>
-     * The string conversion on the data is done using the character encoding specified
-     * in <tt>Content-Type</tt> header. Buffers the response and this method can be 
-     * called several times yielding the same result each time.</p>
-     * 
-     * Note: This will cause the entire response body to be buffered in memory. This method is
-     * safe if the content length of the response is unknown, because the amount of memory used
-     * is limited.<p>
-     * 
-     * If the response is large this method involves lots of array copying and many object 
-     * allocations, which makes it unsuitable for high-performance / low-footprint applications.
-     * Those applications should use {@link #getResponseBodyAsStream()}.
-     * 
-     * @param maxlen the maximum content length to accept (number of bytes). Note that,
-     * depending on the encoding, this is not equal to the number of characters.
-     * @return The response body or <code>null</code>.
-     * 
-     * @throws IOException If an I/O (transport) problem occurs while obtaining the 
-     * response body.
-     */
-    public String getResponseBodyAsString(int maxlen) throws IOException {
-        if (maxlen < 0) throw new IllegalArgumentException("maxlen must be positive");
-        byte[] rawdata = null;
-        if (responseAvailable()) {
-            rawdata = getResponseBody(maxlen);
         }
         if (rawdata != null) {
             return EncodingUtil.getString(rawdata, getResponseCharSet());
@@ -1285,10 +1176,8 @@ public abstract class HttpMethodBase implements HttpMethod {
         if (host == null) {
             host = conn.getHost();
         }
-        // BEGIN IA/HERITRIX CHANGES
         Cookie[] cookies = matcher.match(host, conn.getPort(),
-            getPath(), conn.isSecure(), state.getCookiesMap());
-        // END IA/HERITRIX CHANGES
+            getPath(), conn.isSecure(), state.getCookies());
         if ((cookies != null) && (cookies.length > 0)) {
             if (getParams().isParameterTrue(HttpMethodParams.SINGLE_COOKIE_HEADER)) {
                 // In strict mode put all cookies on the same header
@@ -1299,20 +1188,6 @@ public abstract class HttpMethodBase implements HttpMethod {
                 for (int i = 0; i < cookies.length; i++) {
                     String s = matcher.formatCookie(cookies[i]);
                     getRequestHeaderGroup().addHeader(new Header("Cookie", s, true));
-                }
-            }
-            if (matcher instanceof CookieVersionSupport) {
-                CookieVersionSupport versupport = (CookieVersionSupport) matcher;
-                int ver = versupport.getVersion();
-                boolean needVersionHeader = false;
-                for (int i = 0; i < cookies.length; i++) {
-                    if (ver != cookies[i].getVersion()) {
-                        needVersionHeader = true;
-                    }
-                }
-                if (needVersionHeader) {
-                    // Advertise cookie version support
-                    getRequestHeaderGroup().addHeader(versupport.getVersionHeader());
                 }
             }
         }
@@ -1587,42 +1462,14 @@ public abstract class HttpMethodBase implements HttpMethod {
         LOG.trace("enter HttpMethodBase.processResponseHeaders(HttpState, "
             + "HttpConnection)");
 
-        CookieSpec parser = getCookieSpec(state);
-
-        // process set-cookie headers
-        Header[] headers = getResponseHeaderGroup().getHeaders("set-cookie");
-        processCookieHeaders(parser, headers, state, conn);
-
-        // see if the cookie spec supports cookie versioning.
-        if (parser instanceof CookieVersionSupport) {
-            CookieVersionSupport versupport = (CookieVersionSupport) parser;
-            if (versupport.getVersion() > 0) {
-                // process set-cookie2 headers.
-                // Cookie2 will replace equivalent Cookie instances
-                headers = getResponseHeaderGroup().getHeaders("set-cookie2");
-                processCookieHeaders(parser, headers, state, conn);
-            }
+        Header[] headers = getResponseHeaderGroup().getHeaders("set-cookie2");
+        //Only process old style set-cookie headers if new style headres
+        //are not present
+        if (headers.length == 0) { 
+            headers = getResponseHeaderGroup().getHeaders("set-cookie");
         }
-    }
-
-    /**
-     * This method processes the specified cookie headers. It is invoked from
-     * within {@link #processResponseHeaders(HttpState,HttpConnection)}
-     *
-     * @param headers cookie {@link Header}s to be processed
-     * @param state the {@link HttpState state} information associated with
-     *        this HTTP method
-     * @param conn the {@link HttpConnection connection} used to execute
-     *        this HTTP method
-     */
-    protected void processCookieHeaders(
-            final CookieSpec parser, 
-            final Header[] headers, 
-            final HttpState state, 
-            final HttpConnection conn) {
-        LOG.trace("enter HttpMethodBase.processCookieHeaders(Header[], HttpState, "
-                  + "HttpConnection)");
-
+        
+        CookieSpec parser = getCookieSpec(state);
         String host = this.params.getVirtualHost();
         if (host == null) {
             host = conn.getHost();
@@ -1942,7 +1789,11 @@ public abstract class HttpMethodBase implements HttpMethod {
         
         Header[] headers = HttpParser.parseHeaders(
             conn.getResponseInputStream(), getParams().getHttpElementCharset());
-        // Wire logging moved to HttpParser
+        if (Wire.HEADER_WIRE.enabled()) {
+            for (int i = 0; i < headers.length; i++) {
+                Wire.HEADER_WIRE.input(headers[i].toExternalForm());
+            }
+        }
         getResponseHeaderGroup().setHeaders(headers);
     }
 

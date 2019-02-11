@@ -1,16 +1,15 @@
 /*
  * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//httpclient/src/java/org/apache/commons/httpclient/cookie/CookiePolicy.java,v 1.15 2004/09/14 20:11:31 olegk Exp $
- * $Revision: 480424 $
- * $Date: 2006-11-29 06:56:49 +0100 (Wed, 29 Nov 2006) $
+ * $Revision: 356822 $
+ * $Date: 2005-12-14 13:08:35 -0500 (Wed, 14 Dec 2005) $
  *
  * ====================================================================
  *
- *  Licensed to the Apache Software Foundation (ASF) under one or more
- *  contributor license agreements.  See the NOTICE file distributed with
- *  this work for additional information regarding copyright ownership.
- *  The ASF licenses this file to You under the Apache License, Version 2.0
- *  (the "License"); you may not use this file except in compliance with
- *  the License.  You may obtain a copy of the License at
+ *  Copyright 2002-2004 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -81,15 +80,8 @@ public abstract class CookiePolicy {
      * @since 3.0
      */
     public static final String RFC_2109 = "rfc2109";
-
-    /**
-     * The RFC 2965 compliant policy.
-     *
-     * @since 3.0
-     */
-    public static final String RFC_2965 = "rfc2965";
-
-    /**
+    
+    /** 
      * The policy that ignores cookies. 
      * 
      * @since 3.0
@@ -106,7 +98,6 @@ public abstract class CookiePolicy {
     static {
         CookiePolicy.registerCookieSpec(DEFAULT, RFC2109Spec.class);
         CookiePolicy.registerCookieSpec(RFC_2109, RFC2109Spec.class);
-        CookiePolicy.registerCookieSpec(RFC_2965, RFC2965Spec.class);
         CookiePolicy.registerCookieSpec(BROWSER_COMPATIBILITY, CookieSpecBase.class);
         CookiePolicy.registerCookieSpec(NETSCAPE, NetscapeDraftSpec.class);
         CookiePolicy.registerCookieSpec(IGNORE_COOKIES, IgnoreCookiesSpec.class);
@@ -134,14 +125,7 @@ public abstract class CookiePolicy {
      */
     public static final int RFC2109 = 2;
 
-    /**
-     * The <tt>RFC2965</tt> RFC 2965 compliant policy.
-     *
-     * @deprecated Use {@link #RFC_2965}
-     */
-    public static final int RFC2965 = 3;
-
-    /**
+    /** 
      * The default cookie policy.
      *  
      * @deprecated Use {@link #DEFAULT} 
@@ -257,8 +241,6 @@ public abstract class CookiePolicy {
                 return new NetscapeDraftSpec(); 
             case RFC2109:
                 return new RFC2109Spec();
-            case RFC2965:
-                return new RFC2965Spec();
             default:
                 return getDefaultSpec(); 
         }
@@ -320,19 +302,4 @@ public abstract class CookiePolicy {
     public static CookieSpec getCompatibilitySpec() {
         return getSpecByPolicy(COMPATIBILITY);
     }
-
-    /**
-     * Obtains the currently registered cookie policy names.
-     * 
-     * Note that the DEFAULT policy (if present) is likely to be the same
-     * as one of the other policies, but does not have to be.
-     * 
-     * @return array of registered cookie policy names
-     * 
-     * @since 3.1
-     */
-    public static String[] getRegisteredCookieSpecs(){
-            return (String[]) SPECS.keySet().toArray(new String [SPECS.size()]); 
-    }
-    
 }

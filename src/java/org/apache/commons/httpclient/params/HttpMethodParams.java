@@ -1,16 +1,15 @@
 /*
  * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//httpclient/src/java/org/apache/commons/httpclient/params/HttpMethodParams.java,v 1.17 2004/10/06 17:32:04 olegk Exp $
- * $Revision: 483949 $
- * $Date: 2006-12-08 12:34:50 +0100 (Fri, 08 Dec 2006) $
+ * $Revision: 354155 $
+ * $Date: 2005-12-05 15:18:10 -0500 (Mon, 05 Dec 2005) $
  *
  * ====================================================================
  *
- *  Licensed to the Apache Software Foundation (ASF) under one or more
- *  contributor license agreements.  See the NOTICE file distributed with
- *  this work for additional information regarding copyright ownership.
- *  The ASF licenses this file to You under the Apache License, Version 2.0
- *  (the "License"); you may not use this file except in compliance with
- *  the License.  You may obtain a copy of the License at
+ *  Copyright 1999-2004 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -45,7 +44,7 @@ import org.apache.commons.logging.LogFactory;
  * @author <a href="mailto:oleg@ural.ru">Oleg Kalnichevski</a>
  * @author Christian Kohlschuetter
  * 
- * @version $Revision: 483949 $
+ * @version $Revision: 354155 $
  * 
  * @since 3.0
  */
@@ -165,14 +164,6 @@ public class HttpMethodParams extends DefaultHttpParams {
      * </p>
      */
     public static final String HTTP_ELEMENT_CHARSET = "http.protocol.element-charset"; 
-    
-    /**
-     * Defines the charset to be used for parsing URIs.
-     * <p>
-     * This parameter expects a value of type {@link String}.
-     * </p>
-     */
-    public static final String HTTP_URI_CHARSET = "http.protocol.uri-charset"; 
     
     /**
      * Defines the charset to be used for encoding content body.
@@ -340,26 +331,6 @@ public class HttpMethodParams extends DefaultHttpParams {
         if (charset == null) {
             LOG.warn("Default content charset not configured, using ISO-8859-1");
             charset = "ISO-8859-1";
-        }
-        return charset;
-    }
-    
-    /**
-     * Sets the charset to be used for parsing URIs.
-     * @param charset The charset
-     */
-    public void setUriCharset(String charset) {
-        setParameter(HTTP_URI_CHARSET, charset);
-    }
-
-    /**
-     * Returns the charset to be used for parsing URIs.
-     * @return The charset
-     */
-    public String getUriCharset() {
-        String charset = (String) getParameter(HTTP_URI_CHARSET);
-        if (charset == null) {
-            charset = "UTF-8";
         }
         return charset;
     }

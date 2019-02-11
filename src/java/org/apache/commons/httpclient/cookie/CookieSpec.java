@@ -1,16 +1,15 @@
 /*
  * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//httpclient/src/java/org/apache/commons/httpclient/cookie/CookieSpec.java,v 1.11 2004/09/14 20:11:31 olegk Exp $
- * $Revision: 480424 $
- * $Date: 2006-11-29 06:56:49 +0100 (Wed, 29 Nov 2006) $
+ * $Revision: 356822 $
+ * $Date: 2005-12-14 13:08:35 -0500 (Wed, 14 Dec 2005) $
  *
  * ====================================================================
  *
- *  Licensed to the Apache Software Foundation (ASF) under one or more
- *  contributor license agreements.  See the NOTICE file distributed with
- *  this work for additional information regarding copyright ownership.
- *  The ASF licenses this file to You under the Apache License, Version 2.0
- *  (the "License"); you may not use this file except in compliance with
- *  the License.  You may obtain a copy of the License at
+ *  Copyright 2002-2004 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -31,7 +30,6 @@
 package org.apache.commons.httpclient.cookie;
 
 import java.util.Collection;
-import java.util.SortedMap; // <- IA/HERITRIX CHANGE
 
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.NameValuePair;
@@ -177,34 +175,9 @@ public interface CookieSpec {
      *
      * @return <tt>true</tt> if the cookie should be submitted with a request 
      *  with given attributes, <tt>false</tt> otherwise.
-     *  
-// BEGIN IA/HERITRIX CHANGES
-     * @deprecated use match(String, int, String, boolean, SortedMap)
-// END IA/HERITRIX CHANGES
      */
     Cookie[] match(String host, int port, String path, boolean secure, 
         final Cookie cookies[]);
-
-// BEGIN IA/HERITRIX CHANGES
-    /**
-     * Determines which of an array of Cookies matches a location.
-     *
-     * If the SortedMap comes from an HttpState and is not itself
-     * thread-safe, it may be necessary to synchronize on the HttpState
-     * instance to protect against concurrent modification. 
-     *
-     * @param host the host to which the request is being submitted
-     * @param port the port to which the request is being submitted 
-     *  (currenlty ignored)
-     * @param path the path to which the request is being submitted
-     * @param secure <tt>true</tt> if the request is using a secure protocol
-     * @param cookies SortedMap of <tt>Cookie</tt>s to be matched
-     *
-     * @return <tt>true</tt> if the cookie should be submitted with a request 
-     *  with given attributes, <tt>false</tt> otherwise.
-     */
-    Cookie[] match(String domain, int port, String path, boolean secure, SortedMap cookiesMap);
-// END IA/HERITRIX CHANGES
 
     /**
      * Performs domain-match as defined by the cookie specification.

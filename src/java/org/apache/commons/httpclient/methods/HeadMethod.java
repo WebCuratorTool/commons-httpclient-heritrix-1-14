@@ -1,16 +1,15 @@
 /*
  * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//httpclient/src/java/org/apache/commons/httpclient/methods/HeadMethod.java,v 1.29 2004/06/13 20:22:19 olegk Exp $
- * $Revision: 480424 $
- * $Date: 2006-11-29 06:56:49 +0100 (Wed, 29 Nov 2006) $
+ * $Revision: 155418 $
+ * $Date: 2005-02-26 08:01:52 -0500 (Sat, 26 Feb 2005) $
  *
  * ====================================================================
  *
- *  Licensed to the Apache Software Foundation (ASF) under one or more
- *  contributor license agreements.  See the NOTICE file distributed with
- *  this work for additional information regarding copyright ownership.
- *  The ASF licenses this file to You under the Apache License, Version 2.0
- *  (the "License"); you may not use this file except in compliance with
- *  the License.  You may obtain a copy of the License at
+ *  Copyright 1999-2004 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -63,7 +62,7 @@ import org.apache.commons.logging.LogFactory;
  * @author <a href="mailto:jsdever@apache.org">Jeff Dever</a>
  * @author <a href="mailto:oleg@ural.ru">oleg Kalnichevski</a>
  *
- * @version $Revision: 480424 $
+ * @version $Revision: 155418 $
  * @since 1.0
  */
 public class HeadMethod extends HttpMethodBase {

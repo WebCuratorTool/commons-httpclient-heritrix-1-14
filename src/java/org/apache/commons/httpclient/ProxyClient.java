@@ -1,16 +1,15 @@
 /*
  * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//httpclient/src/java/org/apache/commons/httpclient/ProxyClient.java,v 1.5 2004/12/20 11:39:04 olegk Exp $
- * $Revision: 480424 $
- * $Date: 2006-11-29 06:56:49 +0100 (Wed, 29 Nov 2006) $
+ * $Revision: 354155 $
+ * $Date: 2005-12-05 15:18:10 -0500 (Mon, 05 Dec 2005) $
  *
  * ====================================================================
  *
- *  Licensed to the Apache Software Foundation (ASF) under one or more
- *  contributor license agreements.  See the NOTICE file distributed with
- *  this work for additional information regarding copyright ownership.
- *  The ASF licenses this file to You under the Apache License, Version 2.0
- *  (the "License"); you may not use this file except in compliance with
- *  the License.  You may obtain a copy of the License at
+ *  Copyright 1999-2004 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -37,6 +36,7 @@ import org.apache.commons.httpclient.params.HttpClientParams;
 import org.apache.commons.httpclient.params.HttpConnectionManagerParams;
 import org.apache.commons.httpclient.params.HttpParams;
 
+
 /**
  * A client that provides {@link java.net.Socket sockets} for communicating through HTTP proxies
  * via the HTTP CONNECT method.  This is primarily needed for non-HTTP protocols that wish to 
@@ -47,7 +47,7 @@ import org.apache.commons.httpclient.params.HttpParams;
  * 
  * @since 3.0
  * 
- * @version $Revision: 480424 $
+ * @version $Revision: 354155 $
  */
 public class ProxyClient {
 
@@ -179,18 +179,14 @@ public class ProxyClient {
      */
     public ConnectResponse connect() throws IOException, HttpException {
         
-        HostConfiguration hostconf = getHostConfiguration();
-        if (hostconf.getProxyHost() == null) {
+        if (getHostConfiguration().getProxyHost() == null) {
             throw new IllegalStateException("proxy host must be configured");
         }
-        if (hostconf.getHost() == null) {
+        if (getHostConfiguration().getHost() == null) {
             throw new IllegalStateException("destination host must be configured");
         }
-        if (hostconf.getProtocol().isSecure()) {
-            throw new IllegalStateException("secure protocol socket factory may not be used");
-        }
         
-        ConnectMethod method = new ConnectMethod(getHostConfiguration());
+        ConnectMethod method = new ConnectMethod();
         method.getParams().setDefaults(getParams());
         
         DummyConnectionManager connectionManager = new DummyConnectionManager();
@@ -198,7 +194,7 @@ public class ProxyClient {
         
         HttpMethodDirector director = new HttpMethodDirector(
             connectionManager,
-            hostconf,
+            getHostConfiguration(),
             getParams(),
             getState()
         );

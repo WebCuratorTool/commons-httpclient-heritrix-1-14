@@ -1,16 +1,15 @@
 /*
  * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//httpclient/src/java/org/apache/commons/httpclient/HttpParser.java,v 1.13 2005/01/11 13:57:06 oglueck Exp $
- * $Revision: 533405 $
- * $Date: 2007-04-28 20:19:29 +0200 (Sat, 28 Apr 2007) $
+ * $Revision: 179411 $
+ * $Date: 2005-06-01 16:04:58 -0400 (Wed, 01 Jun 2005) $
  *
  * ====================================================================
  *
- *  Licensed to the Apache Software Foundation (ASF) under one or more
- *  contributor license agreements.  See the NOTICE file distributed with
- *  this work for additional information regarding copyright ownership.
- *  The ASF licenses this file to You under the Apache License, Version 2.0
- *  (the "License"); you may not use this file except in compliance with
- *  the License.  You may obtain a copy of the License at
+ *  Copyright 1999-2004 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -48,7 +47,6 @@ import org.apache.commons.logging.LogFactory;
  * 
  * @since 2.0beta1
  */
-@SuppressWarnings("unchecked") // <- IA/HERITRIX CHANGE
 public class HttpParser {
 
     /** Log object for this class. */
@@ -121,17 +119,7 @@ public class HttpParser {
                 }
             }
         }
-        final String result =
-            EncodingUtil.getString(rawdata, 0, len - offset, charset);
-        if (Wire.HEADER_WIRE.enabled()) {
-            String logoutput = result;
-            if (offset == 2)
-                logoutput = result + "\r\n";
-            else if (offset == 1)
-                logoutput = result + "\n";
-            Wire.HEADER_WIRE.input(logoutput);
-        }
-        return result;
+        return EncodingUtil.getString(rawdata, 0, len - offset, charset);
     }
 
     /**
@@ -199,22 +187,11 @@ public class HttpParser {
                 // Otherwise we should have normal HTTP header line
                 // Parse the header name and value
                 int colon = line.indexOf(":");
-                
-                // START IA/HERITRIX change
-                // Don't throw an exception if can't parse.  We want to keep
-                // going even though header is bad. Rather, create
-                // pseudo-header.
                 if (colon < 0) {
-                    // throw new ProtocolException("Unable to parse header: " +
-                    //      line);
-                    name = "HttpClient-Bad-Header-Line-Failed-Parse";
-                    value = new StringBuffer(line);
-
-                } else {
+                    throw new ProtocolException("Unable to parse header: " + line);
+                }
                 name = line.substring(0, colon).trim();
                 value = new StringBuffer(line.substring(colon + 1).trim());
-                }
-                // END IA/HERITRIX change
             }
 
         }

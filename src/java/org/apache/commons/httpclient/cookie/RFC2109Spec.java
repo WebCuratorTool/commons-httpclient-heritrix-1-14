@@ -1,16 +1,15 @@
 /*
  * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//httpclient/src/java/org/apache/commons/httpclient/cookie/RFC2109Spec.java,v 1.21 2004/06/05 16:49:20 olegk Exp $
- * $Revision: 507134 $
- * $Date: 2007-02-13 19:18:05 +0100 (Tue, 13 Feb 2007) $
+ * $Revision: 290666 $
+ * $Date: 2005-09-21 05:30:56 -0400 (Wed, 21 Sep 2005) $
  * 
  * ====================================================================
  *
- *  Licensed to the Apache Software Foundation (ASF) under one or more
- *  contributor license agreements.  See the NOTICE file distributed with
- *  this work for additional information regarding copyright ownership.
- *  The ASF licenses this file to You under the Apache License, Version 2.0
- *  (the "License"); you may not use this file except in compliance with
- *  the License.  You may obtain a copy of the License at
+ *  Copyright 2002-2004 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -54,14 +53,8 @@ import org.apache.commons.httpclient.util.ParameterFormatter;
 public class RFC2109Spec extends CookieSpecBase {
 
     private final ParameterFormatter formatter;
-
-    /**
-     * Cookie Response Header  name for cookies processed
-     * by this spec.
-     */
-    public final static String SET_COOKIE_KEY = "set-cookie";
-
-    /** Default constructor */
+    
+    /** Default constructor */    
     public RFC2109Spec() {
         super();
         this.formatter = new ParameterFormatter();

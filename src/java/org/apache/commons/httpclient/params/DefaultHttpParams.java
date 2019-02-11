@@ -1,16 +1,15 @@
 /*
  * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//httpclient/src/java/org/apache/commons/httpclient/params/DefaultHttpParams.java,v 1.9 2004/12/21 23:15:21 olegk Exp $
- * $Revision: 510589 $
- * $Date: 2007-02-22 18:04:52 +0100 (Thu, 22 Feb 2007) $
+ * $Revision: 155418 $
+ * $Date: 2005-02-26 08:01:52 -0500 (Sat, 26 Feb 2005) $
  *
  * ====================================================================
  *
- *  Licensed to the Apache Software Foundation (ASF) under one or more
- *  contributor license agreements.  See the NOTICE file distributed with
- *  this work for additional information regarding copyright ownership.
- *  The ASF licenses this file to You under the Apache License, Version 2.0
- *  (the "License"); you may not use this file except in compliance with
- *  the License.  You may obtain a copy of the License at
+ *  Copyright 1999-2004 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -44,7 +43,7 @@ import org.apache.commons.logging.LogFactory;
  * 
  * @author <a href="mailto:oleg@ural.ru">Oleg Kalnichevski</a>
  * 
- * @version $Revision: 510589 $
+ * @version $Revision: 155418 $
  * 
  * @since 3.0
  */
@@ -209,7 +208,7 @@ public class DefaultHttpParams implements HttpParams, Serializable, Cloneable {
     }
     
     public void setBooleanParameter(final String name, boolean value) {
-        setParameter(name, value ? Boolean.TRUE : Boolean.FALSE);// Boolean.valueOf() = Java 1.4+
+        setParameter(name, new Boolean(value));
     }
 
     public boolean isParameterSet(final String name) {

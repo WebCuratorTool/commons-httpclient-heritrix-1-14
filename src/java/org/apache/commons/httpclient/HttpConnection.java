@@ -1,16 +1,15 @@
 /*
  * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//httpclient/src/java/org/apache/commons/httpclient/HttpConnection.java,v 1.107 2005/01/14 21:30:59 olegk Exp $
- * $Revision: 480424 $
- * $Date: 2006-11-29 06:56:49 +0100 (Wed, 29 Nov 2006) $
+ * $Revision: 327792 $
+ * $Date: 2005-10-23 09:34:28 -0400 (Sun, 23 Oct 2005) $
  *
  * ====================================================================
  *
- *  Licensed to the Apache Software Foundation (ASF) under one or more
- *  contributor license agreements.  See the NOTICE file distributed with
- *  this work for additional information regarding copyright ownership.
- *  The ASF licenses this file to You under the Apache License, Version 2.0
- *  (the "License"); you may not use this file except in compliance with
- *  the License.  You may obtain a copy of the License at
+ *  Copyright 1999-2004 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -41,8 +40,6 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
 
-import org.apache.commons.httpclient.heritrix.HttpRecorder;
-import org.apache.commons.httpclient.heritrix.HttpRecorderRetriever;
 import org.apache.commons.httpclient.params.HttpConnectionParams;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
@@ -90,7 +87,7 @@ import org.apache.commons.logging.LogFactory;
  * @author Eric E Johnson
  * @author Laura Werner
  * 
- * @version   $Revision: 480424 $ $Date: 2006-11-29 06:56:49 +0100 (Wed, 29 Nov 2006) $
+ * @version   $Revision: 327792 $ $Date: 2005-10-23 09:34:28 -0400 (Sun, 23 Oct 2005) $
  */
 public class HttpConnection {
 
@@ -744,25 +741,8 @@ public class HttpConnection {
             if ((inbuffersize > 2048) || (inbuffersize <= 0)) {
                 inbuffersize = 2048;
             }
-            
-            // START IA/HERITRIX change
-            HttpRecorder httpRecorder = HttpRecorderRetriever.getHttpRecorder();
-            if (httpRecorder == null || (isSecure() && isProxied())) {
-                // no recorder, OR defer recording for pre-tunnel leg
-                inputStream = new BufferedInputStream(
-                    socket.getInputStream(), inbuffersize);
-                outputStream = new BufferedOutputStream(
-                    socket.getOutputStream(), outbuffersize);
-            } else {
-                inputStream = httpRecorder.inputWrap((InputStream)
-                        (new BufferedInputStream(socket.getInputStream(),
-                        inbuffersize)));
-                outputStream = httpRecorder.outputWrap((OutputStream)
-                        (new BufferedOutputStream(socket.getOutputStream(), 
-                        outbuffersize)));
-            }
-            // END IA/HERITRIX change
-
+            inputStream = new BufferedInputStream(socket.getInputStream(), inbuffersize);
+            outputStream = new BufferedOutputStream(socket.getOutputStream(), outbuffersize);
             isOpen = true;
         } catch (IOException e) {
             // Connection wasn't opened properly
@@ -819,22 +799,8 @@ public class HttpConnection {
         if (inbuffersize > 2048) {
             inbuffersize = 2048;
         }
-
-        // START IA/HERITRIX change
-        HttpRecorder httpRecorder = HttpRecorderRetriever.getHttpRecorder();
-        if (httpRecorder == null) {
         inputStream = new BufferedInputStream(socket.getInputStream(), inbuffersize);
         outputStream = new BufferedOutputStream(socket.getOutputStream(), outbuffersize);
-        } else {
-            inputStream = httpRecorder.inputWrap((InputStream)
-                    (new BufferedInputStream(socket.getInputStream(),
-                    inbuffersize)));
-            outputStream = httpRecorder.outputWrap((OutputStream)
-                (new BufferedOutputStream(socket.getOutputStream(), 
-                outbuffersize)));
-        }
-        // END IA/HERITRIX change
-
         usingSecureSocket = true;
         tunnelEstablished = true;
     }

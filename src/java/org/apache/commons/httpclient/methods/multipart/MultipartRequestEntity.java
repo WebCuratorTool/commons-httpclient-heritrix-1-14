@@ -1,16 +1,15 @@
 /*
  * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//httpclient/src/java/org/apache/commons/httpclient/methods/multipart/MultipartRequestEntity.java,v 1.1 2004/10/06 03:39:59 mbecke Exp $
- * $Revision: 502647 $
- * $Date: 2007-02-02 17:22:54 +0100 (Fri, 02 Feb 2007) $
+ * $Revision: 327791 $
+ * $Date: 2005-10-23 09:27:39 -0400 (Sun, 23 Oct 2005) $
  *
  * ====================================================================
  *
- *  Licensed to the Apache Software Foundation (ASF) under one or more
- *  contributor license agreements.  See the NOTICE file distributed with
- *  this work for additional information regarding copyright ownership.
- *  The ASF licenses this file to You under the Apache License, Version 2.0
- *  (the "License"); you may not use this file except in compliance with
- *  the License.  You may obtain a copy of the License at
+ *  Copyright 2002-2004 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -58,7 +57,7 @@ import org.apache.commons.logging.LogFactory;
  * <p>This entity is designed to be used in conjunction with the 
  * {@link org.apache.commons.httpclient.methods.PostMethod post method} to provide
  * multipart posts.  Example usage:</p>
- * <pre>
+ * <code>
  *  File f = new File("/path/fileToUpload.txt");
  *  PostMethod filePost = new PostMethod("http://host/some_path");
  *  Part[] parts = {
@@ -70,7 +69,7 @@ import org.apache.commons.logging.LogFactory;
  *      );
  *  HttpClient client = new HttpClient();
  *  int status = client.executeMethod(filePost);
- * </pre>
+ * </code>
  * 
  * @since 3.0
  */

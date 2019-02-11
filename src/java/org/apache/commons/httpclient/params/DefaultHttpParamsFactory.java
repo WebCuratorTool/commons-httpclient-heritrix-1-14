@@ -1,16 +1,15 @@
 /*
  * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//httpclient/src/java/org/apache/commons/httpclient/params/DefaultHttpParamsFactory.java,v 1.16 2004/11/20 21:48:47 mbecke Exp $
- * $Revision: 566065 $
- * $Date: 2007-08-15 10:34:30 +0200 (Wed, 15 Aug 2007) $
+ * $Revision: 404762 $
+ * $Date: 2006-05-07 10:07:41 -0400 (Sun, 07 May 2006) $
  *
  * ====================================================================
  *
- *  Licensed to the Apache Software Foundation (ASF) under one or more
- *  contributor license agreements.  See the NOTICE file distributed with
- *  this work for additional information regarding copyright ownership.
- *  The ASF licenses this file to You under the Apache License, Version 2.0
- *  (the "License"); you may not use this file except in compliance with
- *  the License.  You may obtain a copy of the License at
+ *  Copyright 1999-2004 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -67,10 +66,10 @@ public class DefaultHttpParamsFactory implements HttpParamsFactory {
     protected HttpParams createParams() {
         HttpClientParams params = new HttpClientParams(null);
         
-        params.setParameter(HttpMethodParams.USER_AGENT, "Jakarta Commons-HttpClient/3.1");
+        params.setParameter(HttpMethodParams.USER_AGENT, "Jakarta Commons-HttpClient/3.0.1");
         params.setVersion(HttpVersion.HTTP_1_1);
         params.setConnectionManagerClass(SimpleHttpConnectionManager.class);
-        params.setCookiePolicy(CookiePolicy.DEFAULT);
+        params.setCookiePolicy(CookiePolicy.RFC_2109);
         params.setHttpElementCharset("US-ASCII");
         params.setContentCharset("ISO-8859-1");
         params.setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler());

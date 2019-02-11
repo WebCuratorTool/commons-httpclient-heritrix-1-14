@@ -1,16 +1,15 @@
 /*
  * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//httpclient/src/java/org/apache/commons/httpclient/HttpClient.java,v 1.98 2004/10/07 16:14:15 olegk Exp $
- * $Revision: 509577 $
- * $Date: 2007-02-20 15:28:18 +0100 (Tue, 20 Feb 2007) $
+ * $Revision: 354155 $
+ * $Date: 2005-12-05 15:18:10 -0500 (Mon, 05 Dec 2005) $
  *
  * ====================================================================
  *
- *  Licensed to the Apache Software Foundation (ASF) under one or more
- *  contributor license agreements.  See the NOTICE file distributed with
- *  this work for additional information regarding copyright ownership.
- *  The ASF licenses this file to You under the Apache License, Version 2.0
- *  (the "License"); you may not use this file except in compliance with
- *  the License.  You may obtain a copy of the License at
+ *  Copyright 1999-2004 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -55,7 +54,7 @@ import org.apache.commons.logging.LogFactory;
  * @author Laura Werner
  * @author <a href="mailto:oleg@ural.ru">Oleg Kalnichevski</a>
  * 
- * @version $Revision: 509577 $ $Date: 2007-02-20 15:28:18 +0100 (Tue, 20 Feb 2007) $
+ * @version $Revision: 354155 $ $Date: 2005-12-05 15:18:10 -0500 (Mon, 05 Dec 2005) $
  */
 public class HttpClient {
 
@@ -153,7 +152,9 @@ public class HttpClient {
         }
         this.params = params; 
         this.httpConnectionManager = httpConnectionManager;
-        this.httpConnectionManager.getParams().setDefaults(this.params);
+        if (this.httpConnectionManager != null) {
+            this.httpConnectionManager.getParams().setDefaults(this.params);
+        }
     }
     
     /**
@@ -328,7 +329,6 @@ public class HttpClient {
     * {@link HostConfiguration host configuration}.
     *
     * @param hostConfiguration The {@link HostConfiguration host configuration} to use.
-     * If <code>null</code>, the host configuration returned by {@link #getHostConfiguration} will be used.
     * @param method the {@link HttpMethod HTTP method} to execute.
     * @return the method's response code
     *
@@ -354,10 +354,9 @@ public class HttpClient {
      * {@link HttpState HTTP state}.
      *
      * @param hostconfig The {@link HostConfiguration host configuration} to use.
-     * If <code>null</code>, the host configuration returned by {@link #getHostConfiguration} will be used.
      * @param method the {@link HttpMethod HTTP method} to execute.
      * @param state the {@link HttpState HTTP state} to use when executing the method.
-     * If <code>null</code>, the state returned by {@link #getState} will be used.
+     * If <code>null</code>, the state returned by {@link #getState} will be used instead.
      *
      * @return the method's response code
      *
@@ -383,7 +382,7 @@ public class HttpClient {
         URI uri = method.getURI(); 
         if (hostconfig == defaulthostconfig || uri.isAbsoluteURI()) {
             // make a deep copy of the host defaults
-            hostconfig = (HostConfiguration) hostconfig.clone();
+            hostconfig = new HostConfiguration(hostconfig);
             if (uri.isAbsoluteURI()) {
                 hostconfig.setHost(uri);
             }
