@@ -40,6 +40,8 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
 
+import org.apache.commons.httpclient.heritrix.HttpRecorder;
+import org.apache.commons.httpclient.heritrix.HttpRecorderRetriever;
 import org.apache.commons.httpclient.params.HttpConnectionParams;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
@@ -48,8 +50,6 @@ import org.apache.commons.httpclient.util.EncodingUtil;
 import org.apache.commons.httpclient.util.ExceptionUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import org.archive.util.HttpRecorder; // <- // IA/HERITRIX import
 
 /**
  * An abstraction of an HTTP {@link InputStream} and {@link OutputStream}
@@ -745,7 +745,7 @@ public class HttpConnection {
             }
             
             // START IA/HERITRIX change
-            HttpRecorder httpRecorder = HttpRecorder.getHttpRecorder();
+            HttpRecorder httpRecorder = HttpRecorderRetriever.getHttpRecorder();
             if (httpRecorder == null || (isSecure() && isProxied())) {
                 // no recorder, OR defer recording for pre-tunnel leg
                 inputStream = new BufferedInputStream(
@@ -820,7 +820,7 @@ public class HttpConnection {
         }
 
         // START IA/HERITRIX change
-        HttpRecorder httpRecorder = HttpRecorder.getHttpRecorder();
+        HttpRecorder httpRecorder = HttpRecorderRetriever.getHttpRecorder();
         if (httpRecorder == null) {
         inputStream = new BufferedInputStream(socket.getInputStream(), inbuffersize);
         outputStream = new BufferedOutputStream(socket.getOutputStream(), outbuffersize);

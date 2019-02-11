@@ -7,7 +7,7 @@ The heritrix-1.14.1.jar includes overrides of certain Apache commons-httpclient-
 adjusted and additional methods and classes. These changes and subclass are included in the `heritrix-1.14.1.jar`. Only
 the changed classes are included in the `heritrix-1.14.1.jar`, which means that the original `commons-httpclient-3.1.jar` must
 also be included in the classpath. Potential problems occur when the class loader loads the unmodified classes from
-`commons-httpclient-3.1.jar`instead of the modified classes from `heritrix-1.14.1.jar`. This project incorporates all the
+`commons-httpclient-3.0.1.jar`instead of the modified classes from `heritrix-1.14.1.jar`. This project incorporates all the
 changes together and produces a `commons-httpclient.jar` that eliminates issues with class loader variable ordering.
 
 The whole purpose of this project to enable the Web Curator Tool (https://github.com/DIA-NZ/webcurator) to work with the Heritrix 1
@@ -61,7 +61,7 @@ The original source files can be found in the subfolder `original_source`.
 
 Pre-built artifacts can be found in the subfolder `release_archive`.
 
-### Running a maven 2.x/3.x/gradle build with a commons-httpclient 3.1.x dependency
+### Running a maven 2.x/3.x/gradle build with a commons-httpclient 3.x dependency
 
 When running a maven or gradle build that requires this version of commons-pool, the following commands can be used to
 install the dependency in a local maven 2 repository (run these commands from the root folder of this project):
@@ -118,15 +118,15 @@ renaming it to `commons-httpclient-<version>.pom`.
 ## Contributors
 
 The original commits are attributed to the people or organisations named in the `pom.xml` file. Issues related to the changes made
-here are tracked through the github repository issue tracker. Note that there is no history prior to version 3.1 (which is when
-the source was imported into this repository). See the git commits after the tagged 3.1 version for those contributors.
+here are tracked through the github repository issue tracker. Note that there is no history prior to version 3.0.1/3.1 (which is when
+the source was imported into this repository). See the git commits after the tagged 3.0.1/3.1 version for those contributors.
 
 ## License
 
-&copy; 2019 National Library of New Zealand for all project changes past version 3.1. All rights reserved.
+&copy; 2019 National Library of New Zealand for all project changes past version 3.0.1/3.1. All rights reserved.
 GNU Lesser General Public License (LGPL) version 2.1 *and* Apache License Version 2.0.
 
-For code prior up to and including version 3.1, Apache License Version 2.0. The actual code changes from the heritrix-1.14.1
+For code prior up to and including version 3.0.1/3.1, Apache License Version 2.0. The actual code changes from the heritrix-1.14.1
 codebase are LGPL and are attributed to the heritrix team.
 
 ### License incompatability

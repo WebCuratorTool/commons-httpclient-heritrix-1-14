@@ -3,7 +3,7 @@
   <groupId>commons-httpclient</groupId>
   <artifactId>commons-httpclient</artifactId>
   <name>HttpClient</name>
-  <version>3.1.1-heritrix-1.14.2-webcuratortool-2.0.1</version>
+  <version>3.0.1-heritrix-1.14.2-webcuratortool-2.0.1</version>
   <description>The HttpClient  component supports the client-side of RFC 1945 (HTTP/1.0)  and RFC 2616 (HTTP/1.1) , several related specifications (RFC 2109 (Cookies) , RFC 2617 (HTTP Authentication) , etc.), and provides a framework by which new request types (methods) or HTTP extensions can be created easily.</description>
   <url>http://jakarta.apache.org/httpcomponents/httpclient-3.x/</url>
   <properties>

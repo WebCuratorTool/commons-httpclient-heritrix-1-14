@@ -40,6 +40,7 @@ import org.apache.commons.httpclient.auth.AuthState;
 import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.cookie.CookieSpec;
 import org.apache.commons.httpclient.cookie.MalformedCookieException;
+import org.apache.commons.httpclient.heritrix.LaxURI;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.httpclient.util.EncodingUtil;
@@ -217,7 +218,7 @@ public abstract class HttpMethodBase implements HttpMethod {
             }
 // BEGIN IA/HERITRIX CHANGES
 //        setURI(new URI(uri, true));
-          setURI(new org.archive.net.LaxURI(uri, true));
+          setURI(new LaxURI(uri, true));
 // END IA/HERITRIX CHANGES
         } catch (URIException e) {
             throw new IllegalArgumentException("Invalid uri '" 
@@ -264,7 +265,7 @@ public abstract class HttpMethodBase implements HttpMethod {
         }
 //      BEGIN IA/HERITRIX CHANGES
 //      return new URI(buffer.toString(), true);
-        return new org.archive.net.LaxURI(buffer.toString(), true);
+        return new LaxURI(buffer.toString(), true);
 //      END IA/HERITRIX CHANGES
     }
 
