@@ -68,10 +68,10 @@ install the dependency in a local maven 2 repository (run these commands from th
 ```
 mkdir -pv ./target/
 git clone https://github.com/WebCuratorTool/commons-httpclient-heritrix-1-14.git ./target/commons-httpclient-heritrix-1-14
-mvn install:install-file -Dfile=./target/commons-httpclient-heritrix-1-14/commons-httpclient-<version>.jar
+mvn install:install-file -Dfile=./target/commons-httpclient-heritrix-1-14/commons-httpclient-<version>.jar \
+  -DpomFile=./target/commons-httpclient-heritrix-1-14/commons-httpclient-<version>.pom
 ```
-TODO setup the pom file
-Note that the version needs to be chosen for this script to work.
+Note that the version needs to be chosen for this script to work and the `mvn` in the command above is version 2.x or 3.x.
 
 ## Installation
 
